@@ -9,5 +9,7 @@ import com.paragon.orders.Order;
  * To change this template use File | Settings | File Templates.
  */
 public interface FulfillmentService {
+
     void placeOrder(Order order);
+
 }
