@@ -11,7 +11,7 @@ import java.util.*;
 
 public class OrderSystem implements OrderService {
 
-    private static final long MAX_QUOTE_AGE_MILLIS = 20 * 60 * 1000;
+    private static final long MAX_QUOTE_AGE_MILLIS = 1 * 60 * 1000;
 
     public static final BigDecimal STANDARD_PROCESSING_CHARGE = new BigDecimal(5);
     public static final BigDecimal CASE_SIZE = new BigDecimal(12);
@@ -29,8 +29,9 @@ public class OrderSystem implements OrderService {
     }
 
     @Override
-    public void confirmOrder(UUID id, String userAuthToken) {
+    public boolean confirmOrder(UUID id, String userAuthToken) {
 
+        try {
         if (!quotes.containsKey(id)) {
             throw new NoSuchElementException("Offer ID is invalid");
         }
@@ -46,6 +47,13 @@ public class OrderSystem implements OrderService {
         Order completeOrder = new Order(quote.offer.price.multiply(CASE_SIZE).add(STANDARD_PROCESSING_CHARGE), quote, timeNow, userAuthToken);
 
         OrderLedger.getInstance().placeOrder(completeOrder);
-    }
+
+            return  true;
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
+     }
 
 }
