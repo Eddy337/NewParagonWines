@@ -1,4 +1,5 @@
 package com.paragon;
+import com.paragon.orders.Order;
 import com.paragon.stock.Offer;
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,7 +17,8 @@ public class Main {
             // some time may pass...
             Thread.sleep(5 * 1000);
             if (priceAcceptable(offer.price)) {
-                orderSystem.confirmOrder(offer.id, userAuthToken);
+               Order order = orderSystem.confirmOrder(offer.id, userAuthToken);
+                System.out.println(order.summary());
             }
         }
     }

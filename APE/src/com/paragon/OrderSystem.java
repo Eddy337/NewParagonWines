@@ -11,7 +11,7 @@ import java.util.*;
 
 public class OrderSystem implements OrderService {
 
-    private static final long MAX_QUOTE_AGE_MILLIS = 1 * 60 * 1000;
+    private static final long MAX_QUOTE_AGE_MILLIS = 20 * 60 * 10;
 
     public static final BigDecimal STANDARD_PROCESSING_CHARGE = new BigDecimal(5);
     public static final BigDecimal CASE_SIZE = new BigDecimal(12);
@@ -29,7 +29,7 @@ public class OrderSystem implements OrderService {
     }
 
     @Override
-    public boolean confirmOrder(UUID id, String userAuthToken) {
+    public Order confirmOrder(UUID id, String userAuthToken) {
 
         try {
         if (!quotes.containsKey(id)) {
@@ -44,16 +44,36 @@ public class OrderSystem implements OrderService {
             throw new IllegalStateException("Quote expired, please get a new price");
         }
 
-        Order completeOrder = new Order(quote.offer.price.multiply(CASE_SIZE).add(STANDARD_PROCESSING_CHARGE), quote, timeNow, userAuthToken);
+        Order completeOrder = new Order(TotalPrice(quote.offer.price), quote, timeNow, userAuthToken);
 
         OrderLedger.getInstance().placeOrder(completeOrder);
 
-            return  true;
+            return completeOrder;
         }
-        catch (Exception ex)
-        {
-            return false;
+        catch (Exception ex) {
+            return null;
         }
      }
 
+    @Override
+    public BigDecimal TotalPrice(BigDecimal bottlePrice) {
+        return bottlePrice.multiply(CASE_SIZE).add(STANDARD_PROCESSING_CHARGE);
+    }
+
+    private BigDecimal TotalPrice(BigDecimal bottlePrice, int orderConfirmedTime) {
+
+        BigDecimal casePrice = bottlePrice.multiply(CASE_SIZE);
+
+        if (orderConfirmedTime > 2 * 60 * 10) {
+            if (orderConfirmedTime > 10 * 60 * 10) {
+                return casePrice.add(new BigDecimal(20));
+            }
+            else {
+                return casePrice.divide(new BigDecimal(20)).min(new BigDecimal(10));
+            }
+        }
+        else {
+            return casePrice;
+        }
+    }
 }
