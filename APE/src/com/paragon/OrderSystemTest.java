@@ -1,6 +1,7 @@
 package com.paragon;
 
 import com.paragon.orders.Order;
+import com.paragon.orders.OrderLedger;
 import com.paragon.stock.Offer;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,7 +14,7 @@ public class OrderSystemTest {
     public void testSearchForProduct() throws Exception {
         OrderSystem orderSystem = new OrderSystem();
         List<Offer> offers = orderSystem.searchForProduct("C");
-             Assert.assertTrue(!offers.isEmpty());
+        Assert.assertTrue(!offers.isEmpty());
     }
 
     @Test
@@ -29,6 +30,7 @@ public class OrderSystemTest {
         List<Offer> offers = orderSystem.searchForProduct("C");
         Offer offer = offers.get(0);
         Thread.sleep(19 * 60 * 10);
+        orderSystem.add(OrderLedger.getInstance());
         Assert.assertNotNull(orderSystem.confirmOrder(offer.id, "tom@example.com"));
 
     }
@@ -39,6 +41,7 @@ public class OrderSystemTest {
         List<Offer> offers = orderSystem.searchForProduct("C");
         Offer offer = offers.get(0);
         Thread.sleep(21 * 60 * 10);
+        orderSystem.add(OrderLedger.getInstance());
         Assert.assertNull(orderSystem.confirmOrder(offer.id, "tom@example.com"));
 
     }
@@ -49,8 +52,9 @@ public class OrderSystemTest {
         List<Offer> offers = orderSystem.searchForProduct("C");
         Offer offer = offers.get(0);
         Thread.sleep(1 * 60 * 10);
+        orderSystem.add(OrderLedger.getInstance());
         Order order = orderSystem.confirmOrder(offer.id, "tom@example.com");
-        Assert.assertEquals(true, orderSystem.confirmOrder(offer.id, "tom@example.com").totalPrice.equals(orderSystem.TotalPrice(offer.price)));
+        Assert.assertEquals(true, orderSystem.confirmOrder(offer.id, "tom@example.com").totalPrice.equals(orderSystem.totalPrice(offer.price)));
 
     }
 

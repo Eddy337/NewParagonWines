@@ -17,6 +17,11 @@ public class OrderSystem implements OrderService {
     public static final BigDecimal CASE_SIZE = new BigDecimal(12);
 
     private Map<UUID, Quote> quotes = new HashMap<UUID, Quote>();
+    private FulfillmentService fulfillmentService;
+
+    public void add(FulfillmentService fulfillmentService) {
+        this.fulfillmentService = fulfillmentService;
+    }
 
     @Override
     public List<Offer> searchForProduct(String query) {
@@ -44,9 +49,9 @@ public class OrderSystem implements OrderService {
             throw new IllegalStateException("Quote expired, please get a new price");
         }
 
-        Order completeOrder = new Order(TotalPrice(quote.offer.price), quote, timeNow, userAuthToken);
+        Order completeOrder = new Order(totalPrice(quote.offer.price), quote, timeNow, userAuthToken);
 
-        OrderLedger.getInstance().placeOrder(completeOrder);
+        updateOrderLedger(completeOrder);
 
             return completeOrder;
         }
@@ -56,11 +61,16 @@ public class OrderSystem implements OrderService {
      }
 
     @Override
-    public BigDecimal TotalPrice(BigDecimal bottlePrice) {
+    public void updateOrderLedger(Order order) {
+        this.fulfillmentService.placeOrder(order);
+    }
+
+    @Override
+    public BigDecimal totalPrice(BigDecimal bottlePrice) {
         return bottlePrice.multiply(CASE_SIZE).add(STANDARD_PROCESSING_CHARGE);
     }
 
-    private BigDecimal TotalPrice(BigDecimal bottlePrice, int orderConfirmedTime) {
+    private BigDecimal totalPrice(BigDecimal bottlePrice, int orderConfirmedTime) {
 
         BigDecimal casePrice = bottlePrice.multiply(CASE_SIZE);
 

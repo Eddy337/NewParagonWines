@@ -2,6 +2,7 @@ package com.paragon;
 
 import com.paragon.orders.Order;
 import com.paragon.stock.Offer;
+import com.paragon.stock.Quote;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,5 +13,8 @@ public interface OrderService {
 
     Order confirmOrder(UUID id, String userAuthToken);
 
-    BigDecimal TotalPrice(BigDecimal bottlePrice);
+    BigDecimal totalPrice(BigDecimal bottlePrice);
+
+    void updateOrderLedger(Order order);
+
 }
