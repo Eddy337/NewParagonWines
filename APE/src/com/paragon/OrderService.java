@@ -17,4 +17,5 @@ public interface OrderService {
 
     void updateOrderLedger(Order order);
 
+    void add(FulfillmentService fulfillmentService);
 }
