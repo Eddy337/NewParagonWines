@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="newparagonwines" default="all">
+  
+  
+  <property file="newparagonwines.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="128m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/rcs/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/.pyc/**"/>
+    <exclude name="**/.pyo/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/*.lib/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/.bundle/**"/>
+    <exclude name="**/*.rbc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.zip"/>
+    <include name="*.apk"/>
+    <include name="*.war"/>
+    <include name="*.egg"/>
+    <include name="*.ear"/>
+    <include name="*.ane"/>
+    <include name="*.swc"/>
+    <include name="*.jar"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.1.7" value="${jdk.home.1.7}/bin"/>
+  <path id="jdk.classpath.1.7">
+    <fileset dir="${jdk.home.1.7}">
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/deploy.jar"/>
+      <include name="jre/lib/javaws.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jfr.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/management-agent.jar"/>
+      <include name="jre/lib/plugin.jar"/>
+      <include name="jre/lib/resources.jar"/>
+      <include name="jre/lib/rt.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/sunec.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/sunmscapi.jar"/>
+      <include name="jre/lib/ext/zipfs.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.1.7}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.7}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.7"/>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.hamcrest-core-1.3.classpath">
+    <pathelement location="C:/Program Files/Java/jmock-2.6.0/bsh-core-2.0b4.jar"/>
+    <pathelement location="C:/Program Files/Java/jmock-2.6.0/cglib-nodep-2.2.3.jar"/>
+    <pathelement location="C:/Program Files/Java/jmock-2.6.0/hamcrest-core-1.3.jar"/>
+    <pathelement location="C:/Program Files/Java/jmock-2.6.0/hamcrest-library-1.3.jar"/>
+    <pathelement location="C:/Program Files/Java/jmock-2.6.0/hamcrest-unit-test-1.3.jar"/>
+    <pathelement location="C:/Program Files/Java/jmock-2.6.0/jmock-2.6.0.jar"/>
+    <pathelement location="C:/Program Files/Java/jmock-2.6.0/jmock-junit3-2.6.0.jar"/>
+    <pathelement location="C:/Program Files/Java/jmock-2.6.0/jmock-junit4-2.6.0.jar"/>
+    <pathelement location="C:/Program Files/Java/jmock-2.6.0/jmock-legacy-2.6.0.jar"/>
+    <pathelement location="C:/Program Files/Java/jmock-2.6.0/jmock-script-2.6.0.jar"/>
+    <pathelement location="C:/Program Files/Java/jmock-2.6.0/objenesis-1.0.jar"/>
+  </path>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module APE -->
+  
+  <dirname property="module.ape.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.ape" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.ape" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.ape" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.ape" value="${compiler.args}"/>
+  
+  <property name="ape.output.dir" value="${module.ape.basedir}/out/production/APE"/>
+  <property name="ape.testoutput.dir" value="${module.ape.basedir}/out/test/APE"/>
+  
+  <path id="ape.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="ape.module.production.classpath">
+    <path refid="${module.jdk.classpath.ape}"/>
+    <pathelement location="${basedir}/APE/lib/paragon-externals.jar"/>
+    <pathelement location="${idea.home}/lib/junit-4.10.jar"/>
+    <path refid="library.hamcrest-core-1.3.classpath"/>
+  </path>
+
+    <path id="ape.module.tests.classpath">
+        <path refid="${module.jdk.classpath.ape}"/>
+        <pathelement location="${basedir}/APE/lib/paragon-externals.jar"/>
+        <pathelement location="${idea.home}/lib/junit-4.10.jar"/>
+        <path refid="library.hamcrest-core-1.3.classpath"/>
+    </path>
+
+    <path id="ape.runtime.production.module.classpath">
+    <pathelement location="${ape.output.dir}"/>
+    <pathelement location="${basedir}/APE/lib/paragon-externals.jar"/>
+    <pathelement location="${idea.home}/lib/junit-4.10.jar"/>
+    <path refid="library.hamcrest-core-1.3.classpath"/>
+  </path>
+  
+  <path id="ape.module.classpath">
+    <path refid="${module.jdk.classpath.ape}"/>
+    <pathelement location="${ape.output.dir}"/>
+    <pathelement location="${basedir}/APE/lib/paragon-externals.jar"/>
+    <pathelement location="${idea.home}/lib/junit-4.10.jar"/>
+    <path refid="library.hamcrest-core-1.3.classpath"/>
+  </path>
+  
+  <path id="ape.runtime.module.classpath">
+    <pathelement location="${ape.testoutput.dir}"/>
+    <pathelement location="${ape.output.dir}"/>
+    <pathelement location="${basedir}/APE/lib/paragon-externals.jar"/>
+    <pathelement location="${idea.home}/lib/junit-4.10.jar"/>
+    <path refid="library.hamcrest-core-1.3.classpath"/>
+  </path>
+
+    <path id="ape.runtime.tests.classpath">
+        <pathelement location="${ape.testoutput.dir}"/>
+        <pathelement location="${idea.home}/lib/junit-4.10.jar"/>
+        <path refid="library.hamcrest-core-1.3.classpath"/>
+    </path>
+
+
+    <patternset id="excluded.from.module.ape">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.ape">
+    <patternset refid="excluded.from.module.ape"/>
+  </patternset>
+  
+  <path id="ape.module.sourcepath">
+    <dirset dir="${module.ape.basedir}/APE">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.ape" depends="production.jar" description="Compile module APE"/>
+  
+  <target name="compile.module.ape.production" depends="test.ape" description="Compile module APE; production classes">
+    <mkdir dir="${ape.output.dir}"/>
+    <javac destdir="${ape.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ape}/javac">
+      <compilerarg line="${compiler.args.ape}"/>
+      <bootclasspath refid="ape.module.bootclasspath"/>
+      <classpath refid="ape.module.production.classpath"/>
+      <src refid="ape.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.ape"/>
+    </javac>
+    
+    <copy todir="${ape.output.dir}">
+      <fileset dir="${module.ape.basedir}/APE/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="production.jar" description="production jar" depends="compile.module.ape.production">
+      <jar destfile="${ant.project.name}.jar" basedir="${ape.output.dir}"/>
+  </target>
+  
+  <target name="compile.module.ape.tests" description="compile module APE; test classes" unless="skip.tests">
+    <mkdir dir="${ape.testoutput.dir}"/>
+    <javac destdir="${ape.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ape}/javac">
+        <compilerarg line="${compiler.args.ape}"/>
+        <bootclasspath refid="ape.module.bootclasspath"/>
+        <classpath refid="ape.module.tests.classpath"/>
+        <src refid="ape.module.sourcepath"/>
+        <patternset refid="excluded.from.compilation.ape"/>
+    </javac>
+
+      <copy todir="${ape.testoutput.dir}">
+          <fileset dir="${module.ape.basedir}/APE/src">
+              <patternset refid="compiler.resources"/>
+              <type type="file"/>
+          </fileset>
+      </copy>
+  </target>
+
+  <target name="test.ape" depends="compile.module.ape.tests">
+<!--
+      <junit>
+          <classpath refid="ape.runtime.tests.classpath"/>
+          <test name="TestOrderSystem">
+              <formatter type="brief" usefile="false"/>
+          </test>
+      </junit>
+-->
+      <junit>
+          <classpath refid="ape.runtime.tests.classpath"/>
+          <batchtest>
+              <fileset dir="${ape.testoutput.dir}">
+                  <include name="**/*Test*"/>
+              </fileset>
+          </batchtest>
+      </junit>
+  </target>
+
+<!--
+  <target name="test.jar" description="test jar" depends="compile.module.ape.tests">
+     <jar destfile="TestOrderSystem.jar" basedir="${ape.testoutput.dir}"/>
+  </target>
+
+-->
+  <target name="clean.module.ape" description="cleanup module">
+    <delete dir="${ape.output.dir}"/>
+    <delete file="${ant.project.name}.jar"/>
+    <delete dir="${ape.testoutput.dir}"/>
+    <delete file="TestOrderSystem.jar"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.ape" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.ape" description="build all modules"/>
+  
+  <target name="all" depends="build.modules" description="build all"/>
+</project>
