@@ -161,6 +161,7 @@
 
     <path id="ape.runtime.tests.classpath">
         <pathelement location="${ape.testoutput.dir}"/>
+        <pathelement location="${basedir}/APE/lib/paragon-externals.jar"/>
         <pathelement location="${idea.home}/lib/junit-4.10.jar"/>
         <path refid="library.hamcrest-core-1.3.classpath"/>
     </path>
@@ -224,30 +225,18 @@
   </target>
 
   <target name="test.ape" depends="compile.module.ape.tests">
-<!--
-      <junit>
-          <classpath refid="ape.runtime.tests.classpath"/>
-          <test name="TestOrderSystem">
-              <formatter type="brief" usefile="false"/>
-          </test>
-      </junit>
--->
+
       <junit>
           <classpath refid="ape.runtime.tests.classpath"/>
           <batchtest>
-              <fileset dir="${ape.testoutput.dir}">
-                  <include name="**/*Test*"/>
+              <fileset dir="${module.ape.basedir}/APE/src">
+                  <include name="**/TestOrderSystem.java"/>
               </fileset>
           </batchtest>
+          <formatter type="brief" usefile="false"/>
       </junit>
   </target>
 
-<!--
-  <target name="test.jar" description="test jar" depends="compile.module.ape.tests">
-     <jar destfile="TestOrderSystem.jar" basedir="${ape.testoutput.dir}"/>
-  </target>
-
--->
   <target name="clean.module.ape" description="cleanup module">
     <delete dir="${ape.output.dir}"/>
     <delete file="${ant.project.name}.jar"/>
