@@ -19,7 +19,7 @@ public class Main {
             // some time may pass...
             Thread.sleep(5 * 1000);
             if (priceAcceptable(offer.price)) {
-               Order order = orderSystem.confirmOrder(offer.id, userAuthToken);
+               orderSystem.confirmOrder(orderSystem.validQuote(offer.id), userAuthToken, System.currentTimeMillis());
              }
         }
     }

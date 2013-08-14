@@ -11,11 +11,13 @@ import java.util.UUID;
 public interface OrderService {
     List<Offer> searchForProduct(String query);
 
-    Order confirmOrder(UUID id, String userAuthToken);
+    Order confirmOrder(Quote quote, String userAuthToken, long timeNow);
 
-    BigDecimal totalPrice(BigDecimal bottlePrice);
+    BigDecimal totalPrice(BigDecimal bottlePrice, long orderTime, long confirmedOrderTime);
 
     void updateOrderLedger(Order order);
 
     void add(FulfillmentService fulfillmentService);
+
+    Quote validQuote(UUID uuid);
 }

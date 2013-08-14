@@ -12,7 +12,6 @@ public class OrderSystem implements OrderService {
 
     private static final long MAX_QUOTE_AGE_MILLIS = 20 * 60 * 10;
 
-    public static final BigDecimal STANDARD_PROCESSING_CHARGE = new BigDecimal(5);
     public static final BigDecimal CASE_SIZE = new BigDecimal(12);
 
     private Map<UUID, Quote> quotes = new HashMap<UUID, Quote>();
@@ -34,28 +33,16 @@ public class OrderSystem implements OrderService {
     }
 
     @Override
-    public Order confirmOrder(UUID id, String userAuthToken) {
+    public Order confirmOrder(Quote quote, String userAuthToken, long timeNow) {
 
-        try {
-        if (!quotes.containsKey(id)) {
-            throw new NoSuchElementException("Offer ID is invalid");
-        }
-
-        Quote quote = quotes.get(id);
-
-        long timeNow = System.currentTimeMillis();
-
-        if (timeNow - quote.timestamp > MAX_QUOTE_AGE_MILLIS) {
-            throw new IllegalStateException("Quote expired, please get a new price");
-        }
-
-        Order completeOrder = new Order(totalPrice(quote.offer.price), quote, timeNow, userAuthToken);
+        if (quote != null) {
+        Order completeOrder = new Order(totalPrice(quote.offer.price, quote.timestamp, timeNow), quote, timeNow, userAuthToken);
 
         updateOrderLedger(completeOrder);
 
             return completeOrder;
         }
-        catch (Exception ex) {
+        else {
             return null;
         }
      }
@@ -66,16 +53,12 @@ public class OrderSystem implements OrderService {
     }
 
     @Override
-    public BigDecimal totalPrice(BigDecimal bottlePrice) {
-        return bottlePrice.multiply(CASE_SIZE).add(STANDARD_PROCESSING_CHARGE);
-    }
-
-    private BigDecimal totalPrice(BigDecimal bottlePrice, int orderConfirmedTime) {
+    public BigDecimal totalPrice(BigDecimal bottlePrice, long orderTime, long confirmedOrderTime) {
 
         BigDecimal casePrice = bottlePrice.multiply(CASE_SIZE);
 
-        if (orderConfirmedTime > 2 * 60 * 10) {
-            if (orderConfirmedTime > 10 * 60 * 10) {
+        if (timeOutOccurred(orderTime, confirmedOrderTime, 2 * 60 * 10)) {
+            if (timeOutOccurred(orderTime, confirmedOrderTime, 10 * 60 * 10)) {
                 return casePrice.add(new BigDecimal(20));
             }
             else {
@@ -85,5 +68,22 @@ public class OrderSystem implements OrderService {
         else {
             return casePrice;
         }
+    }
+
+    @Override
+    public Quote validQuote(UUID uuid)  {
+
+        Quote quote = quotes.get(uuid);
+
+        if (quote == null || timeOutOccurred(quote.timestamp, System.currentTimeMillis(), MAX_QUOTE_AGE_MILLIS)) {
+             return null;
+        }
+        else {
+            return quote;
+        }
+    }
+
+    private boolean timeOutOccurred(long startTime, long endTime, long timeOutValue) {
+        return timeOutValue < endTime - startTime;
     }
 }

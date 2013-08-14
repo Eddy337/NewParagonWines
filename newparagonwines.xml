@@ -116,8 +116,7 @@
   <property name="compiler.args.ape" value="${compiler.args}"/>
   
   <property name="ape.output.dir" value="${module.ape.basedir}/out/production/APE"/>
-  <property name="ape.testoutput.dir" value="${module.ape.basedir}/out/test/APE"/>
-  
+
   <path id="ape.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->
   </path>
@@ -129,45 +128,14 @@
     <path refid="library.hamcrest-core-1.3.classpath"/>
   </path>
 
-    <path id="ape.module.tests.classpath">
-        <path refid="${module.jdk.classpath.ape}"/>
-        <pathelement location="${basedir}/APE/lib/paragon-externals.jar"/>
-        <pathelement location="${idea.home}/lib/junit-4.10.jar"/>
-        <path refid="library.hamcrest-core-1.3.classpath"/>
-    </path>
-
-    <path id="ape.runtime.production.module.classpath">
-    <pathelement location="${ape.output.dir}"/>
-    <pathelement location="${basedir}/APE/lib/paragon-externals.jar"/>
-    <pathelement location="${idea.home}/lib/junit-4.10.jar"/>
-    <path refid="library.hamcrest-core-1.3.classpath"/>
-  </path>
-  
-  <path id="ape.module.classpath">
-    <path refid="${module.jdk.classpath.ape}"/>
-    <pathelement location="${ape.output.dir}"/>
-    <pathelement location="${basedir}/APE/lib/paragon-externals.jar"/>
-    <pathelement location="${idea.home}/lib/junit-4.10.jar"/>
-    <path refid="library.hamcrest-core-1.3.classpath"/>
-  </path>
-  
   <path id="ape.runtime.module.classpath">
-    <pathelement location="${ape.testoutput.dir}"/>
     <pathelement location="${ape.output.dir}"/>
     <pathelement location="${basedir}/APE/lib/paragon-externals.jar"/>
     <pathelement location="${idea.home}/lib/junit-4.10.jar"/>
     <path refid="library.hamcrest-core-1.3.classpath"/>
   </path>
 
-    <path id="ape.runtime.tests.classpath">
-        <pathelement location="${ape.testoutput.dir}"/>
-        <pathelement location="${basedir}/APE/lib/paragon-externals.jar"/>
-        <pathelement location="${idea.home}/lib/junit-4.10.jar"/>
-        <path refid="library.hamcrest-core-1.3.classpath"/>
-    </path>
-
-
-    <patternset id="excluded.from.module.ape">
+  <patternset id="excluded.from.module.ape">
     <patternset refid="ignored.files"/>
   </patternset>
   
@@ -180,11 +148,8 @@
       <include name="src"/>
     </dirset>
   </path>
-  
-  
-  <target name="compile.module.ape" depends="production.jar" description="Compile module APE"/>
-  
-  <target name="compile.module.ape.production" depends="test.ape" description="Compile module APE; production classes">
+
+  <target name="compile.module.ape" depends="clean.module.ape" description="Compile module APE; production classes">
     <mkdir dir="${ape.output.dir}"/>
     <javac destdir="${ape.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ape}/javac">
       <compilerarg line="${compiler.args.ape}"/>
@@ -202,32 +167,14 @@
     </copy>
   </target>
 
-  <target name="production.jar" description="production jar" depends="compile.module.ape.production">
+  <target name="production.jar" description="production jar" depends="test.ape">
       <jar destfile="${ant.project.name}.jar" basedir="${ape.output.dir}"/>
   </target>
   
-  <target name="compile.module.ape.tests" description="compile module APE; test classes" unless="skip.tests">
-    <mkdir dir="${ape.testoutput.dir}"/>
-    <javac destdir="${ape.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ape}/javac">
-        <compilerarg line="${compiler.args.ape}"/>
-        <bootclasspath refid="ape.module.bootclasspath"/>
-        <classpath refid="ape.module.tests.classpath"/>
-        <src refid="ape.module.sourcepath"/>
-        <patternset refid="excluded.from.compilation.ape"/>
-    </javac>
+  <target name="test.ape" description="unit tests" depends="compile.module.ape">
 
-      <copy todir="${ape.testoutput.dir}">
-          <fileset dir="${module.ape.basedir}/APE/src">
-              <patternset refid="compiler.resources"/>
-              <type type="file"/>
-          </fileset>
-      </copy>
-  </target>
-
-  <target name="test.ape" depends="compile.module.ape.tests">
-
-      <junit>
-          <classpath refid="ape.runtime.tests.classpath"/>
+      <junit haltonfailure="true">
+          <classpath refid="ape.runtime.module.classpath"/>
           <batchtest>
               <fileset dir="${module.ape.basedir}/APE/src">
                   <include name="**/TestOrderSystem.java"/>
@@ -240,8 +187,6 @@
   <target name="clean.module.ape" description="cleanup module">
     <delete dir="${ape.output.dir}"/>
     <delete file="${ant.project.name}.jar"/>
-    <delete dir="${ape.testoutput.dir}"/>
-    <delete file="TestOrderSystem.jar"/>
   </target>
   
   <target name="init" description="Build initialization">
@@ -250,7 +195,7 @@
   
   <target name="clean" depends="clean.module.ape" description="cleanup all"/>
   
-  <target name="build.modules" depends="init, clean, compile.module.ape" description="build all modules"/>
+  <target name="build.modules" depends="init, clean, production.jar" description="build all modules"/>
   
   <target name="all" depends="build.modules" description="build all"/>
 </project>
