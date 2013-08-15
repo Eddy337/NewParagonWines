@@ -12,6 +12,8 @@ public class OrderSystem implements OrderService {
 
     private static final long MAX_QUOTE_AGE_MILLIS = 20 * 60 * 10;
 
+    public static final BigDecimal STANDARD_PROCESSING_CHARGE = new BigDecimal(5);
+
     public static final BigDecimal CASE_SIZE = new BigDecimal(12);
 
     private Map<UUID, Quote> quotes = new HashMap<UUID, Quote>();
@@ -33,14 +35,10 @@ public class OrderSystem implements OrderService {
     }
 
     @Override
-    public Order confirmOrder(Quote quote, String userAuthToken, long timeNow) {
+    public Order confirmOrder(Quote quote, String userAuthToken) {
 
         if (quote != null) {
-        Order completeOrder = new Order(totalPrice(quote.offer.price, quote.timestamp, timeNow), quote, timeNow, userAuthToken);
-
-        updateOrderLedger(completeOrder);
-
-            return completeOrder;
+            return new Order(totalPrice(quote.offer.price), quote, System.currentTimeMillis(), userAuthToken);
         }
         else {
             return null;
@@ -52,6 +50,12 @@ public class OrderSystem implements OrderService {
         this.fulfillmentService.placeOrder(order);
     }
 
+    @Override
+    public BigDecimal totalPrice(BigDecimal bottlePrice) {
+        return bottlePrice.multiply(CASE_SIZE).add(STANDARD_PROCESSING_CHARGE);
+    }
+
+/*
     @Override
     public BigDecimal totalPrice(BigDecimal bottlePrice, long orderTime, long confirmedOrderTime) {
 
@@ -70,12 +74,13 @@ public class OrderSystem implements OrderService {
         }
     }
 
+*/
     @Override
     public Quote validQuote(UUID uuid)  {
 
         Quote quote = quotes.get(uuid);
 
-        if (quote == null || timeOutOccurred(quote.timestamp, System.currentTimeMillis(), MAX_QUOTE_AGE_MILLIS)) {
+        if (quote == null || timeOutOccurred(quote.timestamp, MAX_QUOTE_AGE_MILLIS)) {
              return null;
         }
         else {
@@ -83,7 +88,7 @@ public class OrderSystem implements OrderService {
         }
     }
 
-    private boolean timeOutOccurred(long startTime, long endTime, long timeOutValue) {
-        return timeOutValue < endTime - startTime;
+    public static boolean timeOutOccurred(long pastTime, long maxTimeDifference) {
+        return maxTimeDifference < System.currentTimeMillis() - pastTime;
     }
 }

@@ -39,8 +39,7 @@ public class TestOrderSystem {
         List<Offer> offers = orderSystem.searchForProduct(searchString);
         Thread.sleep(19 * 60 * 10);
         orderSystem.add(OrderLedger.getInstance());
-        Assert.assertNotNull(orderSystem.confirmOrder(orderSystem.validQuote(offers.get(0).id), userAuthToken, System.currentTimeMillis()));
-
+        Assert.assertNotNull(orderSystem.confirmOrder(orderSystem.validQuote(offers.get(0).id), userAuthToken));
     }
 
     @Test
@@ -48,26 +47,23 @@ public class TestOrderSystem {
         List<Offer> offers = orderSystem.searchForProduct(searchString);
         Thread.sleep(21 * 60 * 10);
         orderSystem.add(OrderLedger.getInstance());
-        Assert.assertNull(orderSystem.confirmOrder(orderSystem.validQuote(offers.get(0).id), userAuthToken, System.currentTimeMillis()));
-
+        Assert.assertNull(orderSystem.confirmOrder(orderSystem.validQuote(offers.get(0).id), userAuthToken));
     }
 
     @Test
     public void testConfirmOrderCheckPrice() throws Exception {
         List<Offer> offers = orderSystem.searchForProduct(searchString);
-        long timeNow = System.currentTimeMillis();
         Thread.sleep(1 * 60 * 10);
         orderSystem.add(OrderLedger.getInstance());
         Quote quote = orderSystem.validQuote(offers.get(0).id);
-        orderSystem.confirmOrder(orderSystem.validQuote(offers.get(0).id), userAuthToken, timeNow);
-        Assert.assertEquals(true, orderSystem.confirmOrder(quote, userAuthToken, timeNow).totalPrice.equals(orderSystem.totalPrice(quote.offer.price, quote.timestamp, timeNow)));
-
+        Assert.assertEquals(true, orderSystem.confirmOrder(quote, userAuthToken).totalPrice.equals(orderSystem.totalPrice(quote.offer.price)));
     }
+
     @Test
     public void testConfirmOrderMock() throws Exception {
 
         List<Offer> offers = new ArrayList<Offer>(orderSystem.searchForProduct(searchString));
-        final Order completeOrder = orderSystem.confirmOrder(orderSystem.validQuote(offers.get(0).id), userAuthToken, System.currentTimeMillis());
+        final Order completeOrder = orderSystem.confirmOrder(orderSystem.validQuote(offers.get(0).id), userAuthToken);
         orderSystem.add(fulfillmentService);
 
         mockingContext.checking(new Expectations() {{

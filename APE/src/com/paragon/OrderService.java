@@ -11,9 +11,9 @@ import java.util.UUID;
 public interface OrderService {
     List<Offer> searchForProduct(String query);
 
-    Order confirmOrder(Quote quote, String userAuthToken, long timeNow);
+    Order confirmOrder(Quote quote, String userAuthToken);
 
-    BigDecimal totalPrice(BigDecimal bottlePrice, long orderTime, long confirmedOrderTime);
+    BigDecimal totalPrice(BigDecimal bottlePrice);
 
     void updateOrderLedger(Order order);
 

@@ -19,8 +19,11 @@ public class Main {
             // some time may pass...
             Thread.sleep(5 * 1000);
             if (priceAcceptable(offer.price)) {
-               orderSystem.confirmOrder(orderSystem.validQuote(offer.id), userAuthToken, System.currentTimeMillis());
-             }
+                System.out.println(orderSystem.confirmOrder(orderSystem.validQuote(offer.id), userAuthToken).summary());
+            }
+            else {
+                System.out.println("Sorry, the price is no longer valid");
+            }
         }
     }
     private static boolean priceAcceptable(BigDecimal price) {
