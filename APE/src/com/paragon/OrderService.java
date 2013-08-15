@@ -13,7 +13,7 @@ public interface OrderService {
 
     Order confirmOrder(Quote quote, String userAuthToken);
 
-    BigDecimal totalPrice(BigDecimal bottlePrice);
+    BigDecimal totalPrice(Quote quote);
 
     void updateOrderLedger(Order order);
 

@@ -10,9 +10,7 @@ import java.util.*;
 
 public class OrderSystem implements OrderService {
 
-    private static final long MAX_QUOTE_AGE_MILLIS = 20 * 60 * 10;
-
-    public static final BigDecimal STANDARD_PROCESSING_CHARGE = new BigDecimal(5);
+    public static final long RELATIVE_ONE_MINUTE = 1 * 60 * 10;
 
     public static final BigDecimal CASE_SIZE = new BigDecimal(12);
 
@@ -38,7 +36,7 @@ public class OrderSystem implements OrderService {
     public Order confirmOrder(Quote quote, String userAuthToken) {
 
         if (quote != null) {
-            return new Order(totalPrice(quote.offer.price), quote, System.currentTimeMillis(), userAuthToken);
+            return new Order(totalPrice(quote), quote, System.currentTimeMillis(), userAuthToken);
         }
         else {
             return null;
@@ -51,22 +49,16 @@ public class OrderSystem implements OrderService {
     }
 
     @Override
-    public BigDecimal totalPrice(BigDecimal bottlePrice) {
-        return bottlePrice.multiply(CASE_SIZE).add(STANDARD_PROCESSING_CHARGE);
-    }
+    public BigDecimal totalPrice(Quote quote) {
 
-/*
-    @Override
-    public BigDecimal totalPrice(BigDecimal bottlePrice, long orderTime, long confirmedOrderTime) {
+        BigDecimal casePrice = quote.offer.price.multiply(CASE_SIZE);
 
-        BigDecimal casePrice = bottlePrice.multiply(CASE_SIZE);
-
-        if (timeOutOccurred(orderTime, confirmedOrderTime, 2 * 60 * 10)) {
-            if (timeOutOccurred(orderTime, confirmedOrderTime, 10 * 60 * 10)) {
+        if (timeOutOccurred(quote.timestamp, RELATIVE_ONE_MINUTE * 2)) {
+            if (timeOutOccurred(quote.timestamp, RELATIVE_ONE_MINUTE * 10)) {
                 return casePrice.add(new BigDecimal(20));
             }
             else {
-                return casePrice.divide(new BigDecimal(20)).min(new BigDecimal(10));
+                return casePrice.add(casePrice.divide(new BigDecimal(20)).min(new BigDecimal(10)));
             }
         }
         else {
@@ -74,13 +66,12 @@ public class OrderSystem implements OrderService {
         }
     }
 
-*/
     @Override
     public Quote validQuote(UUID uuid)  {
 
         Quote quote = quotes.get(uuid);
 
-        if (quote == null || timeOutOccurred(quote.timestamp, MAX_QUOTE_AGE_MILLIS)) {
+        if (quote == null || timeOutOccurred(quote.timestamp, RELATIVE_ONE_MINUTE * 20)) {
              return null;
         }
         else {

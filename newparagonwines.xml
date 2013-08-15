@@ -167,11 +167,11 @@
     </copy>
   </target>
 
-  <target name="production.jar" description="production jar" depends="test.ape">
+  <target name="production.jar" description="production jar" depends="unittest.ape">
       <jar destfile="${ant.project.name}.jar" basedir="${ape.output.dir}"/>
   </target>
   
-  <target name="test.ape" description="unit tests" depends="compile.module.ape">
+  <target name="unittest.ape" description="unit tests" depends="compile.module.ape">
 
       <junit haltonfailure="true">
           <classpath refid="ape.runtime.module.classpath"/>
