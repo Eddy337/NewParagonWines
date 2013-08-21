@@ -44,8 +44,16 @@ public class OrderSystem implements OrderService {
      }
 
     @Override
-    public void updateOrderLedger(Order order) {
-        this.fulfillmentService.placeOrder(order);
+    public String updateOrderLedger(Order order) {
+
+        if (order != null) {
+            this.fulfillmentService.placeOrder(order);
+            return order.summary();
+        }
+        else {
+            return "Sorry, the price is no longer valid";
+        }
+
     }
 
     @Override

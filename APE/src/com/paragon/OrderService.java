@@ -15,7 +15,7 @@ public interface OrderService {
 
     BigDecimal totalPrice(Quote quote);
 
-    void updateOrderLedger(Order order);
+    String updateOrderLedger(Order order);
 
     void add(FulfillmentService fulfillmentService);
 

@@ -1,6 +1,7 @@
 package com.paragon;
 import com.paragon.orders.OrderLedger;
 import com.paragon.stock.Offer;
+import com.paragon.orders.Order;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -18,10 +19,7 @@ public class Main {
             // some time may pass...
             Thread.sleep(5 * 1000);
             if (priceAcceptable(offer.price)) {
-                System.out.println(orderSystem.confirmOrder(orderSystem.validQuote(offer.id), userAuthToken).summary());
-            }
-            else {
-                System.out.println("Sorry, the price is no longer valid");
+                System.out.println(orderSystem.updateOrderLedger(orderSystem.confirmOrder(orderSystem.validQuote(offer.id), userAuthToken)));
             }
         }
     }
