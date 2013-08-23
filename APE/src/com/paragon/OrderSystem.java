@@ -10,7 +10,7 @@ import java.util.*;
 
 public class OrderSystem implements OrderService {
 
-    public static final long RELATIVE_ONE_MINUTE = 1 * 60 * 1000;
+    public static final long RELATIVE_ONE_MINUTE = 1 * 60 * 10;
 
     public static final BigDecimal CASE_SIZE = new BigDecimal(12);
 
