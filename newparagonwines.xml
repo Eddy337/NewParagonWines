@@ -80,7 +80,7 @@
     </fileset>
   </path>
   
-  <property name="project.jdk.home" value="${jdk.home.1.7}"/>
+  <property name="project.jdk.home" value="C:/Program Files/Java/jre7"/>
   <property name="project.jdk.bin" value="${jdk.bin.1.7}"/>
   <property name="project.jdk.classpath" value="jdk.classpath.1.7"/>
   
@@ -151,7 +151,7 @@
 
   <target name="compile.module.ape" depends="clean.module.ape" description="Compile module APE; production classes">
     <mkdir dir="${ape.output.dir}"/>
-    <javac destdir="${ape.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ape}/javac">
+    <javac includeantruntime="false" destdir="${ape.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ape}/javac">
       <compilerarg line="${compiler.args.ape}"/>
       <bootclasspath refid="ape.module.bootclasspath"/>
       <classpath refid="ape.module.production.classpath"/>
