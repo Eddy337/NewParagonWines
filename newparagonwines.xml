@@ -161,7 +161,7 @@
     
     <copy todir="${ape.output.dir}">
       <fileset dir="${module.ape.basedir}/APE/src">
-        <patternset refid="compiler.resources"/>
+        <patternset refid="compiler.resources" />
         <type type="file"/>
       </fileset>
     </copy>
