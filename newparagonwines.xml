@@ -124,14 +124,14 @@
   <path id="ape.module.production.classpath">
     <path refid="${module.jdk.classpath.ape}"/>
     <pathelement location="${basedir}/APE/lib/paragon-externals.jar"/>
-    <pathelement location="${idea.home}/lib/junit-4.10.jar"/>
+    <pathelement location="C:\Program Files (x86)\JetBrains\IntelliJ IDEA Community Edition 12.1.4/lib/junit-4.10.jar"/>
     <path refid="library.hamcrest-core-1.3.classpath"/>
   </path>
 
   <path id="ape.runtime.module.classpath">
     <pathelement location="${ape.output.dir}"/>
     <pathelement location="${basedir}/APE/lib/paragon-externals.jar"/>
-    <pathelement location="${idea.home}/lib/junit-4.10.jar"/>
+    <pathelement location="C:\Program Files (x86)\JetBrains\IntelliJ IDEA Community Edition 12.1.4/lib/junit-4.10.jar"/>
     <path refid="library.hamcrest-core-1.3.classpath"/>
   </path>
 
