@@ -156,7 +156,7 @@
       <bootclasspath refid="ape.module.bootclasspath"/>
       <classpath refid="ape.module.production.classpath"/>
       <src refid="ape.module.sourcepath"/>
-      <patternset refid="excluded.from.compilation.ape"/>
+      <patternset refid="excluded.from.compilation.ape" />
     </javac>
     
     <copy todir="${ape.output.dir}">
