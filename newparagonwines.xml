@@ -55,7 +55,7 @@
     <exclude name="**/?*.kt"/>
     <exclude name="**/?*.clj"/>
   </patternset>
-  
+
   <!-- JDK definitions -->
   
   <property name="jdk.bin.1.7" value="C:/Program Files/Java/jdk1.7.0_05/bin"/>
